@@ -1,0 +1,341 @@
+import { BlogPost, Publication, DesignProject } from "./types";
+
+export const profileData = {
+  brandName: "Nipzyy",
+  name: "Hanif Sabillah",
+  role: "Software Engineer & Designer",
+  bio: "Membangun produk digital yang elegan, cepat, dan intuitif. Memadukan estetika desain UI/UX dengan ketahanan arsitektur engineering modern.",
+  location: "Jakarta, Indonesia",
+  availableForHire: true,
+  socialLinks: {
+    github: "https://github.com",
+    linkedin: "https://linkedin.com",
+    twitter: "https://twitter.com",
+    email: "mailto:hanif@example.com",
+    notion: "https://notion.so",
+  },
+  stats: [
+    { label: "Tahun Pengalaman", value: "4+" },
+    { label: "Publikasi Ilmiah", value: "6" },
+    { label: "Proyek Desain Selesai", value: "24+" },
+    { label: "Artikel Blog", value: "18+" },
+  ],
+  skills: [
+    "Next.js & React",
+    "TypeScript",
+    "UI/UX & Figma",
+    "Tailwind CSS",
+    "System Design",
+    "Notion API",
+    "Python & AI",
+    "Design Systems",
+  ],
+};
+
+export const mockPublications: Publication[] = [
+  {
+    id: "pub-1",
+    title: "Optimizing Neural Network Inference in Edge Computing for Real-Time Human Pose Detection",
+    authors: ["Hanif Sabillah", "B. Santoso", "R. Wijaya"],
+    venue: "IEEE International Conference on Artificial Intelligence & Systems (ICAIS)",
+    year: 2025,
+    type: "conference",
+    abstract: "This paper presents a novel model quantization and prune-aware framework designed for low-power edge nodes. By leveraging mixed-precision tensor computing, we achieve a 3.4x speedup in latency while maintaining 98.2% mAP fidelity compared to baseline FP32 models.",
+    doi: "10.1109/ICAIS.2025.10482910",
+    pdfUrl: "https://arxiv.org",
+    codeUrl: "https://github.com",
+    bibtex: `@inproceedings{sabillah2025edge,\n  title={Optimizing Neural Network Inference in Edge Computing for Real-Time Human Pose Detection},\n  author={Hanif Sabillah and Santoso, B. and Wijaya, R.},\n  booktitle={IEEE International Conference on Artificial Intelligence & Systems},\n  year={2025},\n  doi={10.1109/ICAIS.2025.10482910}\n}`,
+    highlighted: true,
+  },
+  {
+    id: "pub-2",
+    title: "Adaptive User Interfaces: Bridging Cognitive Load and Component Hierarchy in Web Systems",
+    authors: ["Hanif Sabillah", "A. Kurniawan"],
+    venue: "Journal of Human-Computer Interaction & Ergonomics (JHCI)",
+    year: 2024,
+    type: "journal",
+    abstract: "We evaluate the behavioral impact of context-aware layout shifts on user attention spans across complex dashboard environments. Empirical eye-tracking and interaction data indicate an 18% reduction in task completion friction under predictive layout orchestration.",
+    doi: "10.1016/j.chb.2024.108234",
+    pdfUrl: "https://arxiv.org",
+    bibtex: `@article{sabillah2024adaptive,\n  title={Adaptive User Interfaces: Bridging Cognitive Load and Component Hierarchy in Web Systems},\n  author={Hanif Sabillah and Kurniawan, A.},\n  journal={Journal of Human-Computer Interaction & Ergonomics},\n  volume={42},\n  pages={112--128},\n  year={2024}\n}`,
+    highlighted: true,
+  },
+  {
+    id: "pub-3",
+    title: "Micro-Frontend Orchestration at Scale: Reliability and Performance Benchmarks",
+    authors: ["Hanif Sabillah"],
+    venue: "ACM International Software Architecture Series",
+    year: 2024,
+    type: "conference",
+    abstract: "An exhaustive comparative benchmark on module federation, isolated iframe sandboxes, and web-component-based micro-frontends under concurrent streaming workloads.",
+    pdfUrl: "https://arxiv.org",
+    codeUrl: "https://github.com",
+    bibtex: `@inproceedings{sabillah2024microfrontends,\n  title={Micro-Frontend Orchestration at Scale: Reliability and Performance Benchmarks},\n  author={Hanif Sabillah},\n  booktitle={ACM International Software Architecture Series},\n  year={2024}\n}`,
+    highlighted: false,
+  },
+  {
+    id: "pub-4",
+    title: "Next-Generation Visual Design Tokens: Towards Autonomous Theme Synchronization",
+    authors: ["Hanif Sabillah", "D. Pratama"],
+    venue: "arXiv Preprint (CS.HC)",
+    year: 2023,
+    type: "preprint",
+    abstract: "We propose a semantic JSON-LD token specification linking Figma variables directly to AST transforms in CSS compilers, eliminating design debt in multi-platform deployments.",
+    doi: "10.48550/arXiv.2311.08920",
+    pdfUrl: "https://arxiv.org",
+    bibtex: `@article{sabillah2023tokens,\n  title={Next-Generation Visual Design Tokens: Towards Autonomous Theme Synchronization},\n  author={Hanif Sabillah and Pratama, D.},\n  journal={arXiv:2311.08920},\n  year={2023}\n}`,
+    highlighted: false,
+  },
+];
+
+export const mockDesignProjects: DesignProject[] = [
+  {
+    id: "design-1",
+    title: "FinFlow: Next-Gen Wealth & Investment Dashboard",
+    category: "UI/UX",
+    description: "Desain sistem perbankan modern yang mengintegrasikan analitik portofolio saham, crypto, dan reksa dana dengan visualisasi data interaktif.",
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    ],
+    tools: ["Figma", "Tailwind CSS", "Design Tokens", "ChartJS"],
+    year: 2025,
+    client: "FinFlow Tech Corp",
+    liveUrl: "https://finflow.example.com",
+    figmaUrl: "https://figma.com",
+    caseStudy: {
+      challenge: "Pengguna ritel sering merasa kewalahan dengan banyaknya angka rumit dan terminologi finansial yang membingungkan.",
+      solution: "Merancang visual hierarchy bertingkat, skema palet biru terstruktur untuk menandakan stabilitas, serta kartu ringkasan berbasis AI.",
+      outcome: "Meningkatkan retensi harian pengguna sebesar 32% dan waktu penyelesaian transaksi 40% lebih cepat.",
+    },
+    featured: true,
+  },
+  {
+    id: "design-2",
+    title: "AuraOS: Minimalist Spatial Cloud OS",
+    category: "Web Design",
+    description: "Eksplorasi antarmuka sistem operasi berbasis browser dengan tipografi tajam, tema deep midnight blue, dan interaksi micro-animation.",
+    coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80",
+    ],
+    tools: ["Figma", "Framer", "WebGL", "Spline 3D"],
+    year: 2024,
+    liveUrl: "https://auraos.example.com",
+    caseStudy: {
+      challenge: "Membuat platform multi-window di browser yang tetap terasa ringan, mulus, dan tidak membebani memori pengguna.",
+      solution: "Mengembangkan virtualized window manager dan layout fleksibel dengan estetika neomorphic frosted glass bernuansa biru.",
+      outcome: "Mendapatkan penghargaan Awwwards Site of the Day (Honorable Mention).",
+    },
+    featured: true,
+  },
+  {
+    id: "design-3",
+    title: "MedicaCare: Telehealth & Electronic Health Records",
+    category: "Mobile App",
+    description: "Aplikasi seluler pendamping pasien dan dokter untuk konsultasi telemedicine, rekam medis digital, dan resep obat instan.",
+    coverImage: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80",
+    ],
+    tools: ["Figma", "Protopie", "iOS Human Interface", "WCAG 2.1"],
+    year: 2024,
+    client: "RS Siloam Network Partner",
+    caseStudy: {
+      challenge: "Pasien lanjut usia kesulitan menavigasi proses booking dokter dan membaca hasil laboratorium.",
+      solution: "Mengimplementasikan aksesibilitas kontras tinggi, font size yang adaptif, dan navigasi bottom bar 3-langkah sederhana.",
+      outcome: "Skor CSAT meningkat menjadi 4.8/5.0 dengan lebih dari 80.000 pengguna aktif bulanan.",
+    },
+    featured: true,
+  },
+  {
+    id: "design-4",
+    title: "Echo Labs: Creative Studio Identity & Branding",
+    category: "Branding",
+    description: "Identitas visual holistik untuk studio riset audio dan kecerdasan buatan, mencakup logo generatif, typography system, dan guidelines.",
+    coverImage: "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80",
+    ],
+    tools: ["Adobe Illustrator", "Figma", "Cinema 4D"],
+    year: 2023,
+    caseStudy: {
+      challenge: "Menciptakan representasi visual gelombang suara dan kecerdasan komputasi yang tidak klise.",
+      solution: "Mengembangkan algoritma vector noise matematis untuk membentuk simbol dinamis yang berubah mengikuti frekuensi audio.",
+      outcome: "Penerapan sukses pada seluruh materi fisik, merchandising, dan portal digital studio.",
+    },
+    featured: false,
+  },
+];
+
+export const mockBlogPosts: BlogPost[] = [
+  {
+    id: "notion-post-1",
+    slug: "membangun-blog-dengan-notion-api-nextjs",
+    title: "Panduan Lengkap Menjadikan Notion sebagai Headless CMS di Next.js",
+    summary: "Bagaimana cara menghubungkan database Notion langsung ke website portofolio modern menggunakan Next.js App Router dan Tailwind CSS.",
+    date: "2025-05-10",
+    tags: ["Notion", "Next.js", "Web Dev", "Tutorial"],
+    readTime: "6 min read",
+    author: "Hanif Sabillah",
+    coverImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80",
+    isPublished: true,
+  },
+  {
+    id: "notion-post-2",
+    slug: "filosofi-warna-biru-dalam-desain-digital",
+    title: "Psikologi & Seni Palet Warna Biru dalam Antarmuka Digital Modern",
+    summary: "Mengapa warna biru menjadi standar industri teknologi dan bagaimana meracik kombinasi Navy, Electric Blue, dan Slate yang memukau mata.",
+    date: "2025-04-22",
+    tags: ["Design System", "UI/UX", "Color Theory"],
+    readTime: "4 min read",
+    author: "Hanif Sabillah",
+    coverImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    isPublished: true,
+  },
+  {
+    id: "notion-post-3",
+    slug: "arsitektur-frontend-2025-komponen-reusable",
+    title: "Prinsip Arsitektur Frontend: Dari Design Tokens hingga Atomic Components",
+    summary: "Eksplorasi strategi membangun komponen antarmuka yang tahan banting, mudah dites, dan menyenangkan untuk dikembangkan di tim besar.",
+    date: "2025-03-14",
+    tags: ["Frontend", "TypeScript", "Architecture"],
+    readTime: "8 min read",
+    author: "Hanif Sabillah",
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+    isPublished: true,
+  },
+  {
+    id: "notion-post-4",
+    slug: "catatan-publikasi-riset-edge-computing",
+    title: "Catatan di Balik Layar: Menulis Makalah Riset tentang Edge Inference",
+    summary: "Refleksi dan proses eksperimen selama 6 bulan mengoptimalkan neural network inference untuk edge devices.",
+    date: "2025-02-01",
+    tags: ["Research", "AI", "Edge Computing"],
+    readTime: "5 min read",
+    author: "Hanif Sabillah",
+    coverImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    isPublished: true,
+  },
+];
+
+export const mockPostContentBlocks: Record<string, any[]> = {
+  "membangun-blog-dengan-notion-api-nextjs": [
+    {
+      id: "b1",
+      type: "heading_1",
+      content: { text: "Mengapa Memilih Notion sebagai CMS?" },
+    },
+    {
+      id: "b2",
+      type: "paragraph",
+      content: {
+        text: "Notion adalah salah satu platform produktivitas paling populer di dunia saat ini. Menulis di Notion terasa sangat natural, memiliki antarmuka yang bersih, dan mendukung formatting blok yang kaya. Alih-alih mengelola admin panel kustom atau CMS tradisional yang rumit, kita dapat memanfaatkan Notion Database sebagai database backend konten blog kita.",
+      },
+    },
+    {
+      id: "b3",
+      type: "callout",
+      content: {
+        icon: "💡",
+        text: "Kelebihan utama: Kamu cukup membuka aplikasi Notion di HP atau laptop, menulis artikel baru, mengubah status menjadi 'Published', dan artikel tersebut akan otomatis muncul di website portofoliomu!",
+      },
+    },
+    {
+      id: "b4",
+      type: "heading_2",
+      content: { text: "Langkah-Langkah Integrasi" },
+    },
+    {
+      id: "b5",
+      type: "bulleted_list_item",
+      content: { text: "Buat integrasi baru di notion.so/my-integrations dan dapatkan Secret API Token." },
+    },
+    {
+      id: "b6",
+      type: "bulleted_list_item",
+      content: { text: "Buat database Notion dengan properti: Title, Slug, Date, Tags, Summary, Published (Checkbox)." },
+    },
+    {
+      id: "b7",
+      type: "bulleted_list_item",
+      content: { text: "Hubungkan (Share) database Notion tersebut dengan integrasi yang kamu buat." },
+    },
+    {
+      id: "b8",
+      type: "bulleted_list_item",
+      content: { text: "Simpan NOTION_API_KEY dan NOTION_DATABASE_ID di file .env.local Next.js kamu." },
+    },
+    {
+      id: "b9",
+      type: "heading_2",
+      content: { text: "Contoh Kode Query Notion SDK" },
+    },
+    {
+      id: "b10",
+      type: "code",
+      content: {
+        language: "typescript",
+        text: `import { Client } from "@notionhq/client";\n\nconst notion = new Client({\n  auth: process.env.NOTION_API_KEY,\n});\n\nexport async function getArticles() {\n  const response = await notion.databases.query({\n    database_id: process.env.NOTION_DATABASE_ID!,\n    filter: {\n      property: "Published",\n      checkbox: { equals: true }\n    }\n  });\n  return response.results;\n}`,
+      },
+    },
+    {
+      id: "b11",
+      type: "quote",
+      content: {
+        text: "\"Integrasi yang baik adalah integrasi yang tidak menambah beban workflow harian, melainkan mempermudahnya.\"",
+      },
+    },
+    {
+      id: "b12",
+      type: "paragraph",
+      content: {
+        text: "Dengan arsitektur Next.js Server Components, token rahasia Notion kamu tetap aman di server dan tidak pernah terekspos ke browser pengunjung. Website kamu tetap super cepat berkat caching dan SSR.",
+      },
+    },
+  ],
+  "filosofi-warna-biru-dalam-desain-digital": [
+    {
+      id: "b1",
+      type: "heading_1",
+      content: { text: "Kekuatan Psikologis Warna Biru" },
+    },
+    {
+      id: "b2",
+      type: "paragraph",
+      content: {
+        text: "Dalam spektrum visual dan psikologi warna, biru melambangkan kepercayaan (trust), ketenangan, kecerdasan analitis, dan stabilitas profesional. Itulah sebabnya raksasa teknologi, institusi keuangan, dan lembaga sains memilih biru sebagai warna identitas utama mereka.",
+      },
+    },
+    {
+      id: "b3",
+      type: "callout",
+      content: {
+        icon: "🌊",
+        text: "Kuncinya adalah kontras dan kedalaman. Menggunakan satu nada biru saja bisa membuat desain terasa datar, tetapi memadukan Navy yang dalam (#0a192f) dengan Royal Blue (#2563eb) dan aksen Cyan/Sky (#38bdf8) menciptakan dimensi visual yang memukau.",
+      },
+    },
+    {
+      id: "b4",
+      type: "heading_2",
+      content: { text: "3 Tingkat Harmoni Biru yang Digunakan di Portfolio Ini" },
+    },
+    {
+      id: "b5",
+      type: "numbered_list_item",
+      content: { text: "Deep Blue / Slate-900: Sebagai canvas gelap yang mewah dan nyaman di mata (anti-fatigue)." },
+    },
+    {
+      id: "b6",
+      type: "numbered_list_item",
+      content: { text: "Electric Sapphire & Indigo: Sebagai warna primer interaksi (tombol, badge aktif, hover state)." },
+    },
+    {
+      id: "b7",
+      type: "numbered_list_item",
+      content: { text: "Sky & Ice Blue: Sebagai aksen highlight, garis glow tipis, dan visual feedback yang tajam." },
+    },
+  ],
+};
