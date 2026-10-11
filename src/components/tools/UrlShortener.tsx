@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Link2,
   Copy,
@@ -10,12 +10,15 @@ import {
   ArrowRight,
   Clock,
   MousePointerClick,
+  RefreshCw,
+  AlertCircle,
+  Database,
 } from "lucide-react";
 
-interface ShortenedLink {
+interface ShortLink {
   id: string;
+  slug: string;
   originalUrl: string;
-  shortCode: string;
   shortUrl: string;
   createdAt: string;
   clicks: number;
@@ -24,98 +27,62 @@ interface ShortenedLink {
 export function UrlShortener() {
   const [originalUrl, setOriginalUrl] = useState<string>("");
   const [customAlias, setCustomAlias] = useState<string>("");
-  const [links, setLinks] = useState<ShortenedLink[]>([]);
+  const [links, setLinks] = useState<ShortLink[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(true);
+  const [dbError, setDbError] = useState<string>("");
 
-  // Load from localStorage
-  useEffect(() => {
+  // Fetch links from API
+  const fetchLinks = useCallback(async () => {
+    setFetchLoading(true);
     try {
-      const saved = localStorage.getItem("nipzyy_shortened_links");
-      if (saved) {
-        setLinks(JSON.parse(saved));
+      const res = await fetch("/api/links");
+      const data = await res.json();
+      if (!res.ok) {
+        setDbError(data.error ?? "Gagal memuat data.");
+        setLinks([]);
       } else {
-        // Initial example links
-        setLinks([
-          {
-            id: "1",
-            originalUrl: "https://notion.so/my-integrations",
-            shortCode: "notion-api",
-            shortUrl: "https://nipzyy.my.id/notion-api",
-            createdAt: "2026-10-11",
-            clicks: 14,
-          },
-          {
-            id: "2",
-            originalUrl: "https://github.com",
-            shortCode: "my-github",
-            shortUrl: "https://nipzyy.my.id/my-github",
-            createdAt: "2026-10-11",
-            clicks: 29,
-          },
-        ]);
+        setDbError("");
+        setLinks(data.links ?? []);
       }
     } catch {
-      // ignore
+      setDbError("Tidak dapat terhubung ke server.");
+    } finally {
+      setFetchLoading(false);
     }
   }, []);
 
-  // Save to localStorage
-  const saveLinks = (updated: ShortenedLink[]) => {
-    setLinks(updated);
-    try {
-      localStorage.setItem("nipzyy_shortened_links", JSON.stringify(updated));
-    } catch {
-      // ignore
-    }
-  };
+  useEffect(() => {
+    fetchLinks();
+  }, [fetchLinks]);
 
-  const handleShorten = (e: React.FormEvent) => {
+  const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    let url = originalUrl.trim();
-    if (!url) {
-      setError("Silakan masukkan URL tujuan.");
-      return;
-    }
-
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = "https://" + url;
-    }
+    setLoading(true);
 
     try {
-      new URL(url);
+      const res = await fetch("/api/links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: customAlias.trim(), originalUrl: originalUrl.trim() }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Gagal membuat link.");
+      } else {
+        setOriginalUrl("");
+        setCustomAlias("");
+        await fetchLinks(); // Refresh list
+      }
     } catch {
-      setError("Format URL tidak valid. Pastikan format link benar.");
-      return;
+      setError("Tidak dapat terhubung ke server.");
+    } finally {
+      setLoading(false);
     }
-
-    // Generate code
-    let code = customAlias.trim().toLowerCase().replace(/[^a-z0-9-_]/g, "");
-    if (!code) {
-      code = Math.random().toString(36).substring(2, 8);
-    }
-
-    // Check duplicate
-    if (links.some((l) => l.shortCode === code)) {
-      setError(`Alias "${code}" sudah digunakan. Coba alias lain.`);
-      return;
-    }
-
-    const newLink: ShortenedLink = {
-      id: Date.now().toString(),
-      originalUrl: url,
-      shortCode: code,
-      shortUrl: `https://nipzyy.my.id/${code}`,
-      createdAt: new Date().toISOString().split("T")[0],
-      clicks: 0,
-    };
-
-    const updated = [newLink, ...links];
-    saveLinks(updated);
-    setOriginalUrl("");
-    setCustomAlias("");
   };
 
   const handleCopy = (id: string, shortUrl: string) => {
@@ -124,21 +91,38 @@ export function UrlShortener() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleClickLink = (id: string, originalUrl: string) => {
-    const updated = links.map((l) =>
-      l.id === id ? { ...l, clicks: l.clicks + 1 } : l
+  const handleOpenLink = async (link: ShortLink) => {
+    // Optimistically update click count in UI
+    setLinks((prev) =>
+      prev.map((l) => (l.id === link.id ? { ...l, clicks: l.clicks + 1 } : l))
     );
-    saveLinks(updated);
-    window.open(originalUrl, "_blank");
-  };
-
-  const handleDelete = (id: string) => {
-    const updated = links.filter((l) => l.id !== id);
-    saveLinks(updated);
+    // Record click server-side
+    try {
+      await fetch("/api/redirect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: link.slug }),
+      });
+    } catch { /* ignore */ }
+    window.open(link.originalUrl, "_blank");
   };
 
   return (
     <div className="space-y-8">
+      {/* DB Status Banner */}
+      {dbError && (
+        <div className="flex items-start gap-3 p-4 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/30 text-xs text-amber-800 dark:text-amber-300">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="font-semibold">Database belum terhubung</p>
+            <p>{dbError}</p>
+            <p className="text-amber-600 dark:text-amber-400">
+              Tambahkan <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">KV_REST_API_URL</code> dan <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">KV_REST_API_TOKEN</code> di Vercel → Settings → Environment Variables (dari Upstash Redis).
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Shortener Form Card */}
       <div className="p-6 sm:p-8 rounded-3xl border border-blue-200 dark:border-blue-900/60 bg-white dark:bg-slate-900/90 shadow-xl space-y-5">
         <form onSubmit={handleShorten} className="space-y-4">
@@ -167,7 +151,7 @@ export function UrlShortener() {
                 </span>
               </label>
               <div className="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/60">
-                <span className="px-3 py-2 text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex items-center">
+                <span className="px-3 py-2 text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex items-center whitespace-nowrap">
                   nipzyy.my.id/
                 </span>
                 <input
@@ -183,17 +167,24 @@ export function UrlShortener() {
             <div className="sm:col-span-4">
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/25 cursor-pointer"
+                disabled={loading || !!dbError}
+                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/25 cursor-pointer"
               >
-                <span>Perpendek Link</span>
-                <ArrowRight className="w-4 h-4" />
+                {loading ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <span>Perpendek Link</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </div>
           </div>
 
           {error && (
-            <p className="text-xs text-red-600 dark:text-red-400 font-medium">
-              ⚠️ {error}
+            <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5" /> {error}
             </p>
           )}
         </form>
@@ -204,14 +195,30 @@ export function UrlShortener() {
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
             <Clock className="w-4 h-4 text-blue-500" />
-            <span>Riwayat Link yang Telah Dibuat:</span>
+            <span>Link Tersimpan di Database:</span>
           </span>
-          <span className="text-xs text-slate-400">{links.length} link</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-400">{links.length}/10 link</span>
+            <button
+              onClick={fetchLinks}
+              disabled={fetchLoading}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors cursor-pointer"
+              title="Refresh"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${fetchLoading ? "animate-spin" : ""}`} />
+            </button>
+          </div>
         </div>
 
-        {links.length === 0 ? (
-          <div className="text-center py-10 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400">
-            Belum ada link yang diperpendek.
+        {fetchLoading ? (
+          <div className="text-center py-10 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400 flex items-center justify-center gap-2">
+            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            <span>Memuat data dari database...</span>
+          </div>
+        ) : links.length === 0 ? (
+          <div className="text-center py-10 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400 flex flex-col items-center gap-2">
+            <Database className="w-6 h-6 opacity-40" />
+            <span>{dbError ? "Database tidak terhubung." : "Belum ada link yang diperpendek."}</span>
           </div>
         ) : (
           <div className="space-y-3">
@@ -220,22 +227,23 @@ export function UrlShortener() {
                 key={item.id}
                 className="p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-blue-950/70 bg-white dark:bg-slate-900/70 hover:border-blue-400 dark:hover:border-blue-800 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs"
               >
-                <div className="space-y-1 max-w-xl">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-blue-600 dark:text-blue-400 font-mono">
+                <div className="space-y-1 max-w-xl min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-sm text-blue-600 dark:text-blue-400 font-mono break-all">
                       {item.shortUrl}
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium flex items-center gap-1">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium flex items-center gap-1 shrink-0">
                       <MousePointerClick className="w-3 h-3" />
                       {item.clicks} klik
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-md">
-                    Target: {item.originalUrl}
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-sm">
+                    → {item.originalUrl}
                   </p>
+                  <p className="text-[10px] text-slate-400">Dibuat: {item.createdAt}</p>
                 </div>
 
-                <div className="flex items-center gap-2 self-end sm:self-center">
+                <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                   <button
                     onClick={() => handleCopy(item.id, item.shortUrl)}
                     className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-colors"
@@ -254,7 +262,7 @@ export function UrlShortener() {
                   </button>
 
                   <button
-                    onClick={() => handleClickLink(item.id, item.originalUrl)}
+                    onClick={() => handleOpenLink(item)}
                     className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
                   >
                     <span>Buka</span>

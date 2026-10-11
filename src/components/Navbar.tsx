@@ -10,8 +10,7 @@ import {
   Menu,
   X,
   Sparkles,
-  BookOpen,
-  Palette,
+  Package,
   FileText,
   Home,
   Wrench,
@@ -20,9 +19,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Publications", href: "/publications", icon: BookOpen },
+  { name: "Product", href: "/product", icon: Package },
   { name: "Blog", href: "/blog", icon: FileText },
-  { name: "Design", href: "/design", icon: Palette },
   { name: "Tools", href: "/tools", icon: Wrench },
 ];
 

@@ -17,6 +17,22 @@ export interface NotionBlock {
   content: any;
 }
 
+export interface Product {
+  id: string;
+  title: string;
+  tagline: string;
+  category: "Web App" | "AI & SaaS" | "Developer Tools" | "Open Source" | "Mobile";
+  description: string;
+  coverImage: string;
+  tags: string[];
+  features: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  featured?: boolean;
+  status: "Live" | "Beta" | "In Development";
+}
+
+// Legacy interfaces kept for backward compatibility if needed
 export interface Publication {
   id: string;
   title: string;

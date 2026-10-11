@@ -88,10 +88,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/publications"
+                  href="/product"
                   className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  Publications
+                  Product Showcase
                 </Link>
               </li>
               <li>
@@ -100,14 +100,6 @@ export function Footer() {
                   className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   Blog (Notion CMS)
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/design"
-                  className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                >
-                  Design Portfolio
                 </Link>
               </li>
               <li>

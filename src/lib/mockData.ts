@@ -1,23 +1,23 @@
-import { BlogPost, Publication, DesignProject } from "./types";
+import { BlogPost, Publication, DesignProject, Product } from "./types";
 
 export const profileData = {
   brandName: "Nipzyy",
   name: "Hanif Sabillah",
-  role: "Software Engineer & Designer",
-  bio: "Membangun produk digital yang elegan, cepat, dan intuitif. Memadukan estetika desain UI/UX dengan ketahanan arsitektur engineering modern.",
+  role: "Software Engineer & Product Builder",
+  bio: "Membangun produk digital yang elegan, cepat, dan intuitif. Memadukan estetika UI/UX dengan ketahanan arsitektur engineering modern.",
   location: "Jakarta, Indonesia",
   availableForHire: true,
   socialLinks: {
-    github: "https://github.com",
+    github: "https://github.com/Hanif15",
     linkedin: "https://linkedin.com",
     twitter: "https://twitter.com",
-    email: "mailto:hanif@example.com",
+    email: "mailto:hanifrgt@gmail.com",
     notion: "https://notion.so",
   },
   stats: [
     { label: "Tahun Pengalaman", value: "4+" },
-    { label: "Publikasi Ilmiah", value: "6" },
-    { label: "Proyek Desain Selesai", value: "24+" },
+    { label: "Produk & Alat Digital", value: "8+" },
+    { label: "Pengguna Aktif", value: "50K+" },
     { label: "Artikel Blog", value: "18+" },
   ],
   skills: [
@@ -339,3 +339,76 @@ export const mockPostContentBlocks: Record<string, any[]> = {
     },
   ],
 };
+
+export const mockProducts: Product[] = [
+  {
+    id: "prod-1",
+    title: "Nipzyy Mini Tools Suite",
+    tagline: "Alat produktivitas lengkap: QR Generator, LaTeX Previewer, Word Counter, & URL Shortener berbasis cloud.",
+    category: "Developer Tools",
+    description: "Kumpulan micro-tools berkecepatan tinggi yang dirancang untuk developer, akademisi, dan kreator konten. Dilengkapi arsitektur serverless, render LaTeX client-side, dan database cloud Upstash Redis.",
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    tags: ["Next.js 16", "TypeScript", "Tailwind CSS", "Redis"],
+    features: [
+      "URL Shortener dengan database persistent & analitik klik",
+      "LaTeX Previewer dengan multi-equation stacked live render",
+      "Word Counter dengan dukungan formatting kaya (bold, italic)",
+      "QR Code Generator instan beresolusi tinggi (PNG export)",
+    ],
+    liveUrl: "/tools",
+    githubUrl: "https://github.com/Hanif15/nipzyyweb",
+    featured: true,
+    status: "Live",
+  },
+  {
+    id: "prod-2",
+    title: "NotionSync Headless CMS Engine",
+    tagline: "Sistem sinkronisasi live konten Notion Database ke Next.js App Router secara instan.",
+    category: "Developer Tools",
+    description: "Framework ringan yang mengubah database Notion menjadi REST/GraphQL content store yang kaya dan performan tinggi dengan ISR caching dan dynamic block parser.",
+    coverImage: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80",
+    tags: ["Notion API", "Next.js", "Serverless", "TypeScript"],
+    features: [
+      "Dukungan properti database lengkap (Tags, Slug, Date, Summary)",
+      "Fallback mock data otomatis jika koneksi database terputus",
+      "Kalkulasi waktu baca dinamis berbasis analitik konten",
+    ],
+    liveUrl: "/blog",
+    githubUrl: "https://github.com/Hanif15/nipzyyweb",
+    featured: true,
+    status: "Live",
+  },
+  {
+    id: "prod-3",
+    title: "AuraOS Cloud Workspace",
+    tagline: "Sistem antarmuka desktop berbasis peramban web modern.",
+    category: "Web App",
+    description: "Eksplorasi antarmuka sistem operasi berbasis browser dengan tipografi tajam, tema deep midnight blue, window manager virtual, dan interaksi micro-animation.",
+    coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    tags: ["React", "WebGL", "Framer Motion", "Tailwind CSS"],
+    features: [
+      "Window multitasking yang responsif dan fleksibel",
+      "Tema frosted glass interaktif beraksen biru",
+      "Terintegrasi dengan cloud storage dan notes editor",
+    ],
+    liveUrl: "https://auraos.nipzyy.my.id",
+    featured: true,
+    status: "Beta",
+  },
+  {
+    id: "prod-4",
+    title: "MedicaCare Telehealth Portal",
+    tagline: "Platform pendamping dokter dan pasien untuk telemedicine & rekam medis digital.",
+    category: "AI & SaaS",
+    description: "Aplikasi layanan kesehatan berbasis web dan seluler untuk konsultasi daring, pencatatan rekam medis digital instan, dan integrasi resep farmasi.",
+    coverImage: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80",
+    tags: ["Next.js", "Node.js", "PostgreSQL", "Tailwind"],
+    features: [
+      "Jadwal temu dokter realtime dan telemedicine room",
+      "Aksesibilitas tinggi sesuai standar WCAG 2.1",
+      "Dashboard analitik pasien yang intuitif",
+    ],
+    featured: false,
+    status: "Live",
+  },
+];
