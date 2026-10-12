@@ -18,14 +18,16 @@ import {
 interface ShortLink {
   id: string;
   slug: string;
-  originalUrl: string;
-  shortUrl: string;
-  createdAt: string;
+  original_url?: string;
+  originalUrl?: string;
+  shortUrl?: string;
+  created_at?: string;
+  createdAt?: string;
   clicks: number;
 }
 
 export function UrlShortener() {
-  const [originalUrl, setOriginalUrl] = useState<string>("");
+  const [originalUrl, setOriginalUrl] = useState<string>("https://nipzyy.my.id");
   const [customAlias, setCustomAlias] = useState<string>("");
   const [links, setLinks] = useState<ShortLink[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -34,21 +36,21 @@ export function UrlShortener() {
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
   const [dbError, setDbError] = useState<string>("");
 
-  // Fetch links from API
+  // Fetch links from Supabase API route
   const fetchLinks = useCallback(async () => {
     setFetchLoading(true);
     try {
       const res = await fetch("/api/links");
       const data = await res.json();
       if (!res.ok) {
-        setDbError(data.error ?? "Gagal memuat data.");
+        setDbError(data.error ?? "Gagal memuat data dari Supabase.");
         setLinks([]);
       } else {
         setDbError("");
         setLinks(data.links ?? []);
       }
     } catch {
-      setDbError("Tidak dapat terhubung ke server.");
+      setDbError("Tidak dapat terhubung ke server Supabase.");
     } finally {
       setFetchLoading(false);
     }
@@ -92,6 +94,7 @@ export function UrlShortener() {
   };
 
   const handleOpenLink = async (link: ShortLink) => {
+    const targetUrl = link.original_url || link.originalUrl || "";
     // Optimistically update click count in UI
     setLinks((prev) =>
       prev.map((l) => (l.id === link.id ? { ...l, clicks: l.clicks + 1 } : l))
@@ -103,8 +106,12 @@ export function UrlShortener() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug: link.slug }),
       });
-    } catch { /* ignore */ }
-    window.open(link.originalUrl, "_blank");
+    } catch {
+      /* ignore */
+    }
+    if (targetUrl) {
+      window.open(targetUrl, "_blank");
+    }
   };
 
   return (
@@ -114,10 +121,10 @@ export function UrlShortener() {
         <div className="flex items-start gap-3 p-4 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/30 text-xs text-amber-800 dark:text-amber-300">
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <p className="font-semibold">Database belum terhubung</p>
+            <p className="font-semibold">Database Supabase belum terhubung</p>
             <p>{dbError}</p>
             <p className="text-amber-600 dark:text-amber-400">
-              Tambahkan <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">KV_REST_API_URL</code> dan <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">KV_REST_API_TOKEN</code> di Vercel → Settings → Environment Variables (dari Upstash Redis).
+              Tambahkan <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">NEXT_PUBLIC_SUPABASE_URL</code> dan <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> di Vercel / file <code>.env.local</code>.
             </p>
           </div>
         </div>
@@ -195,7 +202,7 @@ export function UrlShortener() {
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
             <Clock className="w-4 h-4 text-blue-500" />
-            <span>Link Tersimpan di Database:</span>
+            <span>Link Tersimpan di Database Supabase:</span>
           </span>
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-400">{links.length}/10 link</span>
@@ -213,64 +220,72 @@ export function UrlShortener() {
         {fetchLoading ? (
           <div className="text-center py-10 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400 flex items-center justify-center gap-2">
             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            <span>Memuat data dari database...</span>
+            <span>Memuat data dari Supabase...</span>
           </div>
         ) : links.length === 0 ? (
           <div className="text-center py-10 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-xs text-slate-400 flex flex-col items-center gap-2">
             <Database className="w-6 h-6 opacity-40" />
-            <span>{dbError ? "Database tidak terhubung." : "Belum ada link yang diperpendek."}</span>
+            <span>{dbError ? "Supabase tidak terhubung." : "Belum ada link yang tersimpan di Supabase."}</span>
           </div>
         ) : (
           <div className="space-y-3">
-            {links.map((item) => (
-              <div
-                key={item.id}
-                className="p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-blue-950/70 bg-white dark:bg-slate-900/70 hover:border-blue-400 dark:hover:border-blue-800 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs"
-              >
-                <div className="space-y-1 max-w-xl min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-sm text-blue-600 dark:text-blue-400 font-mono break-all">
-                      {item.shortUrl}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium flex items-center gap-1 shrink-0">
-                      <MousePointerClick className="w-3 h-3" />
-                      {item.clicks} klik
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-sm">
-                    → {item.originalUrl}
-                  </p>
-                  <p className="text-[10px] text-slate-400">Dibuat: {item.createdAt}</p>
-                </div>
+            {links.map((item) => {
+              const fullShortUrl = `https://nipzyy.my.id/${item.slug}`;
+              const targetUrl = item.original_url || item.originalUrl || "";
+              const dateCreated = item.createdAt || (item.created_at ? item.created_at.split("T")[0] : "");
 
-                <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                  <button
-                    onClick={() => handleCopy(item.id, item.shortUrl)}
-                    className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-colors"
-                  >
-                    {copiedId === item.id ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-500" />
-                        <span className="text-emerald-500">Tersalin!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Salin</span>
-                      </>
+              return (
+                <div
+                  key={item.id}
+                  className="p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-blue-950/70 bg-white dark:bg-slate-900/70 hover:border-blue-400 dark:hover:border-blue-800 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs"
+                >
+                  <div className="space-y-1 max-w-xl min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-bold text-sm text-blue-600 dark:text-blue-400 font-mono break-all">
+                        {fullShortUrl}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium flex items-center gap-1 shrink-0">
+                        <MousePointerClick className="w-3 h-3" />
+                        {item.clicks} klik
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-sm">
+                      → {targetUrl}
+                    </p>
+                    {dateCreated && (
+                      <p className="text-[10px] text-slate-400">Dibuat: {dateCreated}</p>
                     )}
-                  </button>
+                  </div>
 
-                  <button
-                    onClick={() => handleOpenLink(item)}
-                    className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
-                  >
-                    <span>Buka</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                    <button
+                      onClick={() => handleCopy(item.id, fullShortUrl)}
+                      className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      {copiedId === item.id ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          <span className="text-emerald-500">Tersalin!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Salin</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handleOpenLink(item)}
+                      className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                    >
+                      <span>Buka</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

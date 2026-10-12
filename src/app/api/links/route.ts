@@ -1,23 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllLinks, createLink, isRedisConfigured } from "@/lib/redis";
+import { getAllLinks, createLink, isSupabaseConfigured, getLinkBySlug } from "@/lib/supabase";
 
-// GET /api/links — ambil semua link (max 10)
+// GET /api/links — ambil maksimal 10 link terbaru dari Supabase
 export async function GET() {
-  if (!isRedisConfigured()) {
+  if (!isSupabaseConfigured()) {
     return NextResponse.json(
-      { error: "Database belum dikonfigurasi. Tambahkan KV_REST_API_URL dan KV_REST_API_TOKEN di Vercel." },
+      { error: "Supabase belum dikonfigurasi. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di environment variables." },
       { status: 503 }
     );
   }
+
   const links = await getAllLinks();
   return NextResponse.json({ links });
 }
 
-// POST /api/links — buat link baru
+// POST /api/links — buat link baru di Supabase
 export async function POST(req: NextRequest) {
-  if (!isRedisConfigured()) {
+  if (!isSupabaseConfigured()) {
     return NextResponse.json(
-      { error: "Database belum dikonfigurasi. Tambahkan KV_REST_API_URL dan KV_REST_API_TOKEN di Vercel." },
+      { error: "Supabase belum dikonfigurasi. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di environment variables." },
       { status: 503 }
     );
   }
@@ -35,22 +36,22 @@ export async function POST(req: NextRequest) {
       originalUrl = "https://" + originalUrl;
     }
 
-    // Validate URL
+    // Validasi URL
     try {
       new URL(originalUrl);
     } catch {
       return NextResponse.json({ error: "Format URL tidak valid." }, { status: 400 });
     }
 
-    // Auto-generate slug if empty
+    // Auto-generate slug jika kosong
     if (!slug?.trim()) {
       slug = Math.random().toString(36).substring(2, 8);
     }
     slug = slug.trim().toLowerCase().replace(/[^a-z0-9-_]/g, "");
 
-    // Check duplicate slug
-    const existing = await getAllLinks();
-    if (existing.some((l) => l.slug === slug)) {
+    // Cek apakah slug sudah ada
+    const existing = await getLinkBySlug(slug);
+    if (existing) {
       return NextResponse.json(
         { error: `Alias "${slug}" sudah digunakan. Coba alias lain.` },
         { status: 409 }
@@ -59,7 +60,10 @@ export async function POST(req: NextRequest) {
 
     const link = await createLink(slug, originalUrl);
     return NextResponse.json({ link }, { status: 201 });
-  } catch (err) {
-    return NextResponse.json({ error: "Gagal menyimpan link." }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err?.message || "Gagal menyimpan link ke Supabase." },
+      { status: 500 }
+    );
   }
 }

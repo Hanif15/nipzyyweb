@@ -245,16 +245,6 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {isUsingMock && (
-          <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/70 dark:bg-blue-950/30 text-xs text-blue-800 dark:text-blue-300 flex items-center justify-between gap-2">
-            <span>
-              ℹ️ Menampilkan mock data Notion. Sambungkan <code>NOTION_API_KEY</code> di <code>.env.local</code> untuk menyinkronkan tulisan live dari akun Notion kamu.
-            </span>
-            <Link href="/blog" className="underline font-semibold shrink-0">
-              Detail Setup
-            </Link>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {latestArticles.map((article) => (

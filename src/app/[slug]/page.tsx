@@ -1,5 +1,5 @@
 import { redirect, notFound } from "next/navigation";
-import { getLinkBySlug, incrementClicks, isRedisConfigured } from "@/lib/redis";
+import { getLinkBySlug, incrementClicks, isSupabaseConfigured } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -18,12 +18,12 @@ export default async function SlugRedirectPage({
     notFound();
   }
 
-  // Only attempt redirect if Redis is configured
-  if (isRedisConfigured()) {
+  // Only attempt redirect if Supabase is configured
+  if (isSupabaseConfigured()) {
     const link = await getLinkBySlug(slug);
     if (link) {
       await incrementClicks(slug);
-      redirect(link.originalUrl);
+      redirect(link.original_url || link.originalUrl || "/");
     }
   }
 

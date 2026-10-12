@@ -56,7 +56,7 @@ export default async function BlogPostPage({
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
       {/* Navigation Back */}
-      <div className="flex items-center justify-between">
+      <div>
         <Link
           href="/blog"
           className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -64,12 +64,6 @@ export default async function BlogPostPage({
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Kembali ke Blog</span>
         </Link>
-
-        {isUsingMock && (
-          <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-medium">
-            Pratinjau Mock Notion
-          </span>
-        )}
       </div>
 
       {/* Article Header */}
