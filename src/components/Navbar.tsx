@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
 import {
@@ -9,8 +10,6 @@ import {
   Moon,
   Menu,
   X,
-  Sparkles,
-  Package,
   FileText,
   Home,
   Wrench,
@@ -19,7 +18,6 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Product", href: "/product", icon: Package },
   { name: "Blog", href: "/blog", icon: FileText },
   { name: "Tools", href: "/tools", icon: Wrench },
 ];
@@ -55,15 +53,22 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand / Logo */}
         <Link href="/" className="group flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-400 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 animate-pulse" />
+          <div className="w-9 h-9 rounded-full overflow-hidden bg-black flex items-center justify-center border border-slate-700/60 shadow-md group-hover:scale-105 transition-transform shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Nipzyy Logo"
+              width={36}
+              height={36}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               Nipzyy<span className="text-blue-500">.</span>
             </span>
             <span className="text-[10px] tracking-wider uppercase font-medium text-slate-500 dark:text-slate-400 -mt-1">
-              Portfolio & Blog
+              Portfolio &amp; Blog
             </span>
           </div>
         </Link>

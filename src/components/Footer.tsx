@@ -7,8 +7,6 @@ import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/Icons";
 import {
   Mail,
   ArrowUp,
-  ExternalLink,
-  Sparkles,
 } from "lucide-react";
 
 export function Footer() {
@@ -19,20 +17,30 @@ export function Footer() {
   return (
     <footer className="border-t border-slate-200/80 dark:border-blue-950/80 bg-white/50 dark:bg-[#070d18] mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {/* Brand & Bio */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
-                <Sparkles className="w-4 h-4" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-black flex items-center justify-center border border-slate-700/60 shadow-sm shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.png"
+                  alt="Nipzyy Logo"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="font-bold text-lg text-slate-900 dark:text-white">
                 Nipzyy
                 <span className="text-blue-500">.</span>
               </span>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed">
-              Personal portfolio &amp; blog oleh <span className="font-semibold text-slate-900 dark:text-white">{profileData.name}</span>. {profileData.bio}
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
+              Personal portfolio &amp; blog oleh <span className="font-semibold text-slate-900 dark:text-white">{profileData.name}</span>.
+            </p>
+            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+              Thanks for stopping by. There&apos;s always more to explore.
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a
@@ -88,14 +96,6 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/product"
-                  className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                >
-                  Product Showcase
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/blog"
                   className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
@@ -112,30 +112,6 @@ export function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Notion & Tech Stack badge */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-200 mb-4">
-              Integrasi Headless
-            </h3>
-            <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/60 dark:bg-blue-950/30 text-xs space-y-2 text-slate-600 dark:text-slate-300">
-              <div className="flex items-center gap-2 font-medium text-blue-700 dark:text-blue-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>Notion API Ready</span>
-              </div>
-              <p className="leading-relaxed">
-                Tulisan blog disinkronisasi langsung dari database Notion. Dilengkapi fallback mock post.
-              </p>
-              <a
-                href="https://developers.notion.com"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline pt-1"
-              >
-                Notion API Docs <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          </div>
         </div>
 
         {/* Bottom bar */}
@@ -145,7 +121,7 @@ export function Footer() {
             <span className="text-slate-400 dark:text-slate-600">Built with Next.js, Tailwind &amp; Notion</span>
             <button
               onClick={scrollToTop}
-              className="flex items-center gap-1 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors p-1"
+              className="flex items-center gap-1 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors p-1 cursor-pointer"
             >
               <span>Back to top</span>
               <ArrowUp className="w-3.5 h-3.5" />

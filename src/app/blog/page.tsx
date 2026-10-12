@@ -4,9 +4,9 @@ import { BlogList } from "./BlogList";
 import { FileText } from "lucide-react";
 
 export const metadata = {
-  title: "Blog & Catatan Teknis — Hanif Sabillah (Nipzyy)",
+  title: "Notes & Thoughts — Hanif Sabillah (Nipzyy)",
   description:
-    "Kumpulan tulisan seputar web development, UI/UX design system, artificial intelligence, dan riset teknologi.",
+    "I write about things I'm learning, concepts I'm exploring, projects I'm working on, and thoughts worth putting into words.",
 };
 
 export const dynamic = "force-dynamic";
@@ -20,13 +20,13 @@ export default async function BlogPage() {
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider">
           <FileText className="w-4 h-4" />
-          <span>Articles &amp; Thoughts</span>
+          <span>Notes &amp; Thoughts</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-          Blog &amp; Publikasi Tulisan
+          Notes &amp; Thoughts
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-base sm:text-lg">
-          Catatan teknis, eksplorasi desain, dan studi kasus yang ditulis dan dikelola langsung menggunakan antarmuka Notion Database.
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
+          I write about things I&apos;m learning, concepts I&apos;m exploring, projects I&apos;m working on, and thoughts worth putting into words.
         </p>
       </div>
 

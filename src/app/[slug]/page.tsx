@@ -4,7 +4,7 @@ import { getLinkBySlug, incrementClicks, isSupabaseConfigured } from "@/lib/supa
 export const dynamic = "force-dynamic";
 
 // Named routes that should NOT be treated as short links
-const RESERVED_SLUGS = new Set(["blog", "design", "publications", "product", "tools", "api"]);
+const RESERVED_SLUGS = new Set(["blog", "tools", "api"]);
 
 export default async function SlugRedirectPage({
   params,

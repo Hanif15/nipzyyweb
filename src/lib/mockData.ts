@@ -21,14 +21,11 @@ export const profileData = {
     { label: "Artikel Blog", value: "18+" },
   ],
   skills: [
-    "Next.js & React",
-    "TypeScript",
-    "UI/UX & Figma",
-    "Tailwind CSS",
-    "System Design",
-    "Notion API",
-    "Python & AI",
-    "Design Systems",
+    "Statistics",
+    "Data Analyst",
+    "Programming",
+    "RStudio",
+    "Ms. Excel",
   ],
 };
 

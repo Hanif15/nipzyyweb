@@ -317,6 +317,11 @@ export async function getArticleBySlug(slug: string): Promise<{
       console.warn("Could not fetch Notion blocks:", blockErr);
     }
 
+    // Calculate accurate read time based on the actual blocks content
+    if (blocks.length > 0) {
+      article.readTime = calculateReadTimeFromBlocks(blocks);
+    }
+
     return {
       article,
       blocks,
@@ -324,10 +329,51 @@ export async function getArticleBySlug(slug: string): Promise<{
     };
   } catch (error) {
     console.error("Notion fetch single article error:", error);
+    const fallbackBlocks = (mockPost && mockPostContentBlocks[mockPost.slug]) || [];
+    const fallbackArticle = mockPost ? { ...mockPost } : null;
+    if (fallbackArticle && fallbackBlocks.length > 0) {
+      fallbackArticle.readTime = calculateReadTimeFromBlocks(fallbackBlocks);
+    }
     return {
-      article: mockPost || null,
-      blocks: (mockPost && mockPostContentBlocks[mockPost.slug]) || [],
+      article: fallbackArticle,
+      blocks: fallbackBlocks,
       isUsingMock: true,
     };
   }
 }
+
+/**
+ * Calculates accurate reading time based on total words in all blocks of a blog post
+ */
+export function calculateReadTimeFromBlocks(blocks: any[]): string {
+  if (!blocks || !Array.isArray(blocks) || blocks.length === 0) {
+    return "1 min read";
+  }
+
+  let totalWords = 0;
+
+  for (const block of blocks) {
+    // Support Notion SDK raw blocks and mock content blocks
+    const type = block.type;
+    const data = block[type] || block.content || {};
+
+    let textContent = "";
+    if (Array.isArray(data.rich_text)) {
+      textContent = data.rich_text.map((t: any) => t.plain_text || "").join(" ");
+    } else if (typeof data.text === "string") {
+      textContent = data.text;
+    } else if (typeof data.rich_text === "string") {
+      textContent = data.rich_text;
+    }
+
+    if (textContent) {
+      const words = textContent.trim().split(/\s+/).filter(Boolean);
+      totalWords += words.length;
+    }
+  }
+
+  // Average reading speed: 200 words per minute
+  const minutes = Math.max(1, Math.ceil(totalWords / 200));
+  return `${minutes} min read`;
+}
+
