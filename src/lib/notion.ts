@@ -210,6 +210,19 @@ async function queryNotionDatabasePages(): Promise<any[]> {
   return [];
 }
 
+function getMockArticlesWithSyncedReadTime(): BlogPost[] {
+  return mockBlogPosts.map((post) => {
+    const blocks = mockPostContentBlocks[post.slug];
+    if (blocks && blocks.length > 0) {
+      return {
+        ...post,
+        readTime: calculateReadTimeFromBlocks(blocks),
+      };
+    }
+    return post;
+  });
+}
+
 /**
  * Fetch all published articles from Notion Database
  * Falls back to mock data if Notion credentials are not configured or error occurs.
@@ -220,7 +233,7 @@ export async function getPublishedArticles(): Promise<{
 }> {
   if (!notion || !apiKey) {
     return {
-      articles: mockBlogPosts,
+      articles: getMockArticlesWithSyncedReadTime(),
       isUsingMock: true,
     };
   }
@@ -245,6 +258,28 @@ export async function getPublishedArticles(): Promise<{
     publishedOnly.sort((a, b) => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
+
+    const targetList = publishedOnly.length > 0 ? publishedOnly : articles;
+
+    // Synchronize exact block-based readTime for each article so homepage & blog list match the article view
+    await Promise.all(
+      targetList.map(async (article) => {
+        try {
+          if (notion) {
+            const blocksRes = await notion.blocks.children.list({
+              block_id: article.id,
+              page_size: 100,
+            });
+            const blocks = blocksRes.results || [];
+            if (blocks.length > 0) {
+              article.readTime = calculateReadTimeFromBlocks(blocks);
+            }
+          }
+        } catch (err) {
+          console.warn(`Could not fetch blocks for readTime sync (${article.slug}):`, err);
+        }
+      })
+    );
 
     if (publishedOnly.length === 0) {
       // If there are articles in Notion but none marked Published=true, return all of them or mock
