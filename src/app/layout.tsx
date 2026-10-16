@@ -6,9 +6,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Nipzyy — Portfolio, Publications & Notion Blog by Hanif Sabillah",
+  title: "Nipzyy - Personal Blog",
   description:
-    "Personal portfolio website Nipzyy by Hanif Sabillah: academic publications, design showcase, and live blog powered by Notion API.",
+    "Personal blog website Nipzyy by Hanif Sabillah: technical writings, thoughts, and live blog powered by Notion API.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning className="dark">
       <body className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 dark:bg-[#060b13] dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
         <ThemeProvider>
-          <div className="relative min-h-screen flex flex-col overflow-hidden">
+          <div className="relative min-h-screen flex flex-col overflow-x-clip">
             {/* Ambient blue background glows */}
             <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent blur-3xl -z-10 rounded-full dark:from-blue-600/20 dark:via-blue-800/10" />
             <div className="pointer-events-none fixed top-1/3 -left-48 w-96 h-96 bg-sky-500/10 blur-3xl -z-10 rounded-full dark:bg-sky-600/10" />

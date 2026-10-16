@@ -155,3 +155,35 @@ export async function incrementClicks(slug: string): Promise<void> {
     console.error("incrementClicks error:", err);
   }
 }
+
+/**
+ * Delete a short link by id or slug
+ */
+export async function deleteLink(idOrSlug: string): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) throw new Error("Supabase is not configured");
+
+  // Determine if id is numeric id or slug
+  const isNumeric = /^\d+$/.test(idOrSlug);
+  let query = client.from("short_links").delete();
+
+  if (isNumeric) {
+    query = query.eq("id", Number(idOrSlug));
+  } else {
+    query = query.eq("slug", idOrSlug);
+  }
+
+  const { data, error } = await query.select();
+  if (error) {
+    console.error("deleteLink error:", error);
+    throw new Error(error.message || "Gagal menghapus link dari database.");
+  }
+
+  if (!data || data.length === 0) {
+    throw new Error(
+      "Gagal menghapus link. Kebijakan RLS (Row Level Security) 'delete' belum diaktifkan di Supabase SQL Editor."
+    );
+  }
+
+  return true;
+}

@@ -17,7 +17,6 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Home", href: "/", icon: Home },
   { name: "Blog", href: "/blog", icon: FileText },
   { name: "Tools", href: "/tools", icon: Wrench },
 ];
@@ -52,7 +51,7 @@ export function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand / Logo */}
-        <Link href="/" className="group flex items-center gap-2.5">
+        <Link href="/blog" className="group flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-full overflow-hidden bg-black flex items-center justify-center border border-slate-700/60 shadow-md group-hover:scale-105 transition-transform shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -68,7 +67,7 @@ export function Navbar() {
               Nipzyy<span className="text-blue-500">.</span>
             </span>
             <span className="text-[10px] tracking-wider uppercase font-medium text-slate-500 dark:text-slate-400 -mt-1">
-              Portfolio &amp; Blog
+              Personal Blog
             </span>
           </div>
         </Link>

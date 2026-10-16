@@ -32,3 +32,9 @@ create policy "Allow public update clicks"
   on public.short_links
   for update
   using (true);
+
+-- Policy untuk menghapus link
+create policy "Allow public delete"
+  on public.short_links
+  for delete
+  using (true);

@@ -12,6 +12,9 @@ import {
   RefreshCw,
   AlertCircle,
   Database,
+  Trash2,
+  Lock,
+  X,
 } from "lucide-react";
 
 interface ShortLink {
@@ -34,6 +37,12 @@ export function UrlShortener() {
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
   const [dbError, setDbError] = useState<string>("");
+
+  // Modal State for password-protected deletion
+  const [deleteTarget, setDeleteTarget] = useState<ShortLink | null>(null);
+  const [deletePassword, setDeletePassword] = useState<string>("");
+  const [deleteError, setDeleteError] = useState<string>("");
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   // Fetch links from database API route
   const fetchLinks = useCallback(async () => {
@@ -110,6 +119,41 @@ export function UrlShortener() {
     }
     if (targetUrl) {
       window.open(targetUrl, "_blank");
+    }
+  };
+
+  const handleDeleteConfirm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!deleteTarget) return;
+
+    setDeleteError("");
+    setDeleteLoading(true);
+
+    try {
+      const res = await fetch("/api/links", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: deleteTarget.id,
+          slug: deleteTarget.slug,
+          password: deletePassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setDeleteError(data.error || "Password salah atau gagal menghapus.");
+      } else {
+        // Success: close modal and refresh
+        setDeleteTarget(null);
+        setDeletePassword("");
+        await fetchLinks();
+      }
+    } catch {
+      setDeleteError("Terjadi kesalahan jaringan.");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -278,6 +322,18 @@ export function UrlShortener() {
                       <span>Buka</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </button>
+
+                    <button
+                      onClick={() => {
+                        setDeleteTarget(item);
+                        setDeletePassword("");
+                        setDeleteError("");
+                      }}
+                      className="p-1.5 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
+                      title="Hapus Link (Perlu Password)"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               );
@@ -285,6 +341,81 @@ export function UrlShortener() {
           </div>
         )}
       </div>
+
+      {/* Password Confirmation Modal for Link Deletion */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-md p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-base">
+                <Lock className="w-4 h-4 text-red-500" />
+                <span>Konfirmasi Hapus Link</span>
+              </div>
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+              <p>
+                Anda akan menghapus short link permanen dari database:
+              </p>
+              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-xs break-all text-blue-600 dark:text-blue-400 font-semibold">
+                nipzyy.my.id/{deleteTarget.slug}
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Masukkan password admin untuk melanjutkan penghapusan:
+              </p>
+            </div>
+
+            <form onSubmit={handleDeleteConfirm} className="space-y-4 pt-1">
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="password"
+                  autoFocus
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Masukkan password..."
+                  className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500"
+                />
+              </div>
+
+              {deleteError && (
+                <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{deleteError}</span>
+                </p>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setDeleteTarget(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-medium cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={deleteLoading || !deletePassword}
+                  className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-red-600/20 cursor-pointer"
+                >
+                  {deleteLoading ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-3.5 h-3.5" />
+                  )}
+                  <span>Hapus Sekarang</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@ export const profileData = {
   brandName: "Nipzyy",
   name: "Hanif Sabillah",
   role: "Software Engineer & Product Builder",
-  bio: "Membangun produk digital yang elegan, cepat, dan intuitif. Memadukan estetika UI/UX dengan ketahanan arsitektur engineering modern.",
+  bio: "Manusia biasa yang suka nulis",
   location: "Jakarta, Indonesia",
   availableForHire: true,
   socialLinks: {

@@ -114,8 +114,12 @@ export function NotionBlockRenderer({ block }: BlockProps) {
   switch (type) {
     case "heading_1": {
       const text = block.heading_1?.rich_text || block.content?.text;
+      const headingId = block.id ? `heading-${block.id}` : undefined;
       return (
-        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-10 mb-4 pb-2 border-b border-blue-200 dark:border-blue-900/60">
+        <h2
+          id={headingId}
+          className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-10 mb-4 pb-2 border-b border-blue-200 dark:border-blue-900/60 scroll-mt-28"
+        >
           {renderRichText(text)}
         </h2>
       );
@@ -123,8 +127,12 @@ export function NotionBlockRenderer({ block }: BlockProps) {
 
     case "heading_2": {
       const text = block.heading_2?.rich_text || block.content?.text;
+      const headingId = block.id ? `heading-${block.id}` : undefined;
       return (
-        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-3 flex items-center gap-2">
+        <h3
+          id={headingId}
+          className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-3 flex items-center gap-2 scroll-mt-28"
+        >
           <span className="w-1.5 h-5 bg-blue-600 rounded-full inline-block" />
           {renderRichText(text)}
         </h3>
@@ -133,8 +141,12 @@ export function NotionBlockRenderer({ block }: BlockProps) {
 
     case "heading_3": {
       const text = block.heading_3?.rich_text || block.content?.text;
+      const headingId = block.id ? `heading-${block.id}` : undefined;
       return (
-        <h4 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-slate-100 mt-6 mb-2">
+        <h4
+          id={headingId}
+          className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-slate-100 mt-6 mb-2 scroll-mt-28"
+        >
           {renderRichText(text)}
         </h4>
       );

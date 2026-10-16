@@ -4,7 +4,7 @@ import { BlogList } from "./BlogList";
 import { FileText } from "lucide-react";
 
 export const metadata = {
-  title: "Notes & Thoughts — Hanif Sabillah (Nipzyy)",
+  title: "Nipzyy - Personal Blog",
   description:
     "I write about things I'm learning, concepts I'm exploring, projects I'm working on, and thoughts worth putting into words.",
 };
@@ -23,7 +23,7 @@ export default async function BlogPage() {
           <span>Notes &amp; Thoughts</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-          Notes &amp; Thoughts
+          Personal Blog
         </h1>
         <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
           I write about things I&apos;m learning, concepts I&apos;m exploring, projects I&apos;m working on, and thoughts worth putting into words.

@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllLinks, createLink, isSupabaseConfigured, getLinkBySlug } from "@/lib/supabase";
+import {
+  getAllLinks,
+  createLink,
+  deleteLink,
+  isSupabaseConfigured,
+  getLinkBySlug,
+} from "@/lib/supabase";
 
-// GET /api/links — ambil maksimal 10 link terbaru dari Supabase
+const DELETE_PASSWORD = process.env.SHORTENER_DELETE_PASSWORD || "hapus123";
+
+// GET /api/links — ambil maksimal 10 link terbaru dari database
 export async function GET() {
   if (!isSupabaseConfigured()) {
     return NextResponse.json(
-      { error: "Supabase belum dikonfigurasi. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di environment variables." },
+      {
+        error:
+          "Database belum dikonfigurasi. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di environment variables.",
+      },
       { status: 503 }
     );
   }
@@ -14,11 +25,14 @@ export async function GET() {
   return NextResponse.json({ links });
 }
 
-// POST /api/links — buat link baru di Supabase
+// POST /api/links — buat link baru di database
 export async function POST(req: NextRequest) {
   if (!isSupabaseConfigured()) {
     return NextResponse.json(
-      { error: "Supabase belum dikonfigurasi. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di environment variables." },
+      {
+        error:
+          "Database belum dikonfigurasi. Tambahkan NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di environment variables.",
+      },
       { status: 503 }
     );
   }
@@ -28,7 +42,10 @@ export async function POST(req: NextRequest) {
     let { slug, originalUrl } = body as { slug?: string; originalUrl?: string };
 
     if (!originalUrl?.trim()) {
-      return NextResponse.json({ error: "URL tujuan tidak boleh kosong." }, { status: 400 });
+      return NextResponse.json(
+        { error: "URL tujuan tidak boleh kosong." },
+        { status: 400 }
+      );
     }
 
     // Auto-prefix https://
@@ -40,7 +57,10 @@ export async function POST(req: NextRequest) {
     try {
       new URL(originalUrl);
     } catch {
-      return NextResponse.json({ error: "Format URL tidak valid." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Format URL tidak valid." },
+        { status: 400 }
+      );
     }
 
     // Auto-generate slug jika kosong
@@ -62,7 +82,49 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ link }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json(
-      { error: err?.message || "Gagal menyimpan link ke Supabase." },
+      { error: err?.message || "Gagal menyimpan link ke database." },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/links — hapus link dengan validasi password
+export async function DELETE(req: NextRequest) {
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json(
+      { error: "Database belum dikonfigurasi." },
+      { status: 503 }
+    );
+  }
+
+  try {
+    const body = await req.json();
+    const { id, slug, password } = body as {
+      id?: string;
+      slug?: string;
+      password?: string;
+    };
+
+    if (password !== DELETE_PASSWORD) {
+      return NextResponse.json(
+        { error: "Password salah! Tidak dapat menghapus link." },
+        { status: 401 }
+      );
+    }
+
+    const target = id || slug;
+    if (!target) {
+      return NextResponse.json(
+        { error: "ID atau slug link harus disertakan." },
+        { status: 400 }
+      );
+    }
+
+    await deleteLink(target);
+    return NextResponse.json({ success: true, message: "Link berhasil dihapus." });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err?.message || "Gagal menghapus link dari database." },
       { status: 500 }
     );
   }

@@ -37,7 +37,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
-              Personal portfolio &amp; blog oleh <span className="font-semibold text-slate-900 dark:text-white">{profileData.name}</span>.
+              Personal blog oleh <span className="font-semibold text-slate-900 dark:text-white">{profileData.name}</span>.
             </p>
             <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
               Thanks for stopping by. There&apos;s always more to explore.
@@ -88,18 +88,10 @@ export function Footer() {
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
-                  href="/"
-                  className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/blog"
                   className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  Blog (Notion CMS)
+                  Blog
                 </Link>
               </li>
               <li>
@@ -107,7 +99,7 @@ export function Footer() {
                   href="/tools"
                   className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  Mini Tools
+                  Tools
                 </Link>
               </li>
             </ul>
@@ -116,7 +108,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-          <p>© 2026 {profileData.name}. All rights reserved.</p>
+          <p>© 2026 Nipzyy. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <span className="text-slate-400 dark:text-slate-600">Built with Next.js, Tailwind &amp; Notion</span>
             <button
