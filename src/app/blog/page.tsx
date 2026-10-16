@@ -6,7 +6,7 @@ import { FileText } from "lucide-react";
 export const metadata = {
   title: "Nipzyy - Personal Blog",
   description:
-    "I write about things I'm learning, concepts I'm exploring, projects I'm working on, and thoughts worth putting into words.",
+    "Nggak ada topik khusus, cuma nulis apa yang lagi dipikirin, dipelajarin, atau pengen diceritain.",
 };
 
 export const dynamic = "force-dynamic";
@@ -26,7 +26,7 @@ export default async function BlogPage() {
           Personal Blog
         </h1>
         <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
-          I write about things I&apos;m learning, concepts I&apos;m exploring, projects I&apos;m working on, and thoughts worth putting into words.
+          Nggak ada topik khusus, cuma nulis apa yang lagi dipikirin, dipelajarin, atau pengen diceritain.
         </p>
       </div>
 

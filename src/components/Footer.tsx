@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { profileData } from "@/lib/mockData";
-import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/Icons";
+import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon } from "@/components/Icons";
 import {
   Mail,
   ArrowUp,
@@ -53,13 +53,13 @@ export function Footer() {
                 <GithubIcon className="w-4 h-4" />
               </a>
               <a
-                href={profileData.socialLinks.linkedin}
+                href={profileData.socialLinks.instagram}
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-400 transition-colors"
-                aria-label="LinkedIn"
+                aria-label="Instagram"
               >
-                <LinkedinIcon className="w-4 h-4" />
+                <InstagramIcon className="w-4 h-4" />
               </a>
               <a
                 href={profileData.socialLinks.twitter}
@@ -69,6 +69,15 @@ export function Footer() {
                 aria-label="Twitter"
               >
                 <TwitterIcon className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href={profileData.socialLinks.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-400 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <LinkedinIcon className="w-4 h-4" />
               </a>
               <a
                 href={profileData.socialLinks.email}

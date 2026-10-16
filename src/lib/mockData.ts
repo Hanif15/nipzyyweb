@@ -10,7 +10,8 @@ export const profileData = {
   socialLinks: {
     github: "https://github.com/Hanif15",
     linkedin: "https://linkedin.com",
-    twitter: "https://twitter.com",
+    twitter: "https://twitter.com/justnipzyy",
+    instagram: "https://instagram.com/justnipzyy",
     email: "mailto:hanifrgt@gmail.com",
     notion: "https://notion.so",
   },
